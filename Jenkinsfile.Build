@@ -1,0 +1,22 @@
+ pipeline {
+     agent any
+
+     options {
+         disableConcurrentBuilds()   
+         skipDefaultCheckout()
+     }
+
+     triggers {
+         upstream(upstreamProjects: 'multiple-jenkinsfile')
+     }
+
+     stages {
+         stage('Build') {
+             lock('multiple-jenkinsfile') {
+                 steps {
+                     echo 'Build within multiple-jenkinsfile lock...'
+                 }
+             }
+         }
+     }
+ }
