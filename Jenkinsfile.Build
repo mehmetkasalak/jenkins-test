@@ -1,22 +1,27 @@
- pipeline {
-     agent any
+def build = [
+    steps: [
+        'Build Pips': {
+            stage('Parallel'){
+				stage('In Parallel 1') {
+					echo "In Parallel 1"
+				}
+				stage('In Parallel 2') {
+					echo "In Parallel 2"
+				}
+			}
+        }
+    ]
+]
 
-     options {
-         disableConcurrentBuilds()   
-         skipDefaultCheckout()
-     }
-
-     triggers {
-         upstream(upstreamProjects: 'multiple-jenkinsfile')
-     }
-
-     stages {
-         stage('Build') {
-             lock('multiple-jenkinsfile') {
-                 steps {
-                     echo 'Build within multiple-jenkinsfile lock...'
-                 }
-             }
-         }
-     }
- }
+pipeline {
+    agent any
+    stages {
+	   stage('Parallel Stage') {
+			steps{
+				script{
+					parallel (build.steps)
+				}
+			}
+		}
+    }
+}
