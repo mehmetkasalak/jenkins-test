@@ -25,14 +25,10 @@ pipeline {
 					for (entries in changeLogSets) {
 						for (entry in entries) {
 							for (file in entry.affectedFiles) {
-								echo "Found changed file: ${file.path}"
+								echo "Found changed file: ${file}"
 								changedFiles.add("${file.path}")
 							}
 						}
-					}
-					
-					changedFiles.each{file -> 
-						echo "Changes: " + file
 					}
 				}
 			}
