@@ -1,21 +1,12 @@
 def run() {
     node('my-pipeline-CI'){
-        pipeline {
-			agent any
-			stages {
-				stage('CI Stage') {
-					steps {
-						echo 'I am the first CI'
-					}
-				}
-				stage('CI Stage 2') {
-					steps {
-						echo 'I am the second CI'
-					}
-				}
-			}
-		}
+        stage('CI Stage') {
+            echo 'I am the first CI'
+        }
+        stage('CI Stage 2') {
+            echo 'I am the second CI'
+        }
 	}
 }
 
-return this 
+return this
