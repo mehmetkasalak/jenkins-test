@@ -1,5 +1,5 @@
  node{
-    stage() {
+    stage('App Stage') {
         echo 'I am the App'
     }
 }

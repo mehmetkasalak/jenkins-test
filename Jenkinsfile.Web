@@ -1,5 +1,5 @@
  node{
-    stage() {
+    stage('Web Stage') {
         echo 'I am the WEB'
     }
 }
