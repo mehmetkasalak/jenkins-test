@@ -23,13 +23,11 @@ node {
 	}
 	if(hasAppChange){
 		echo "Has App Change"
-		jenkinsFile = "Jenkinsfile.App"
-		load jenkinsFile
+		load "Jenkinsfile.App"
 	}
 	
 	if(hasWebChange){
 		echo "Has Web Change"
-		jenkinsFile = "Jenkinsfile.Web"
-		load jenkinsFile
+		load "Jenkinsfile.Web"
 	}
 }
