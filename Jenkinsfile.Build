@@ -28,10 +28,7 @@ pipeline {
 								echo "Found changed file: ${file.path}"
 								changedFiles.add("${file.path}")
 							}
-							for (aFile in entry.affectedPaths) {
-								echo "Found changed file: ${aFile}"
-								changedFiles.add("${file.path}")
-							}
+							echo "Found changed file: ${entry}"
 						}
 					}
 				}
