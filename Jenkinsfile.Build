@@ -32,10 +32,12 @@ pipeline {
 					}
 
 					if(hasAppChange){
+						echo "Has App Change"
 						load "Jenkinsfile.App"
 					}
 
 					if(hasWebChange){
+						echo "Has Web Change"
 						load "Jenkinsfile.Web"
 					}
 				}
