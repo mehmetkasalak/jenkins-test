@@ -4,6 +4,6 @@ node {
 		stage("Determine build file") {
 			jenkinsFile = "Jenkinsfile.CI"
 		}
+		load jenkinsFile
 	}
-	load jenkinsFile
 }
