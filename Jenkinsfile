@@ -26,11 +26,14 @@ node {
 		echo "Has App Change"
 		jenkinsFile = "Jenkinsfile.App"
 	}
-	load jenkinsFile
+	if(jenkinsFile != null)
+		load jenkinsFile
 		
 	if(hasWebChange){
 		echo "Has Web Change"
 		jenkinsFile = "Jenkinsfile.Web"
-		load jenkinsFile
 	}
+
+	if(jenkinsFile != null)
+		load jenkinsFile
 }
