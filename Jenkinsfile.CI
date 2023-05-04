@@ -1,4 +1,4 @@
- node('my-pipeline-CI'){
+ node{
     stage('CI Stage') {
         echo 'I am the first CI'
     }
