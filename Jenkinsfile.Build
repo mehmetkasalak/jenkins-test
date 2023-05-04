@@ -32,7 +32,7 @@ pipeline {
 					}
 					
 					changedFiles.each{file -> 
-						echo file
+						echo "Changes: " + file
 					}
 				}
 			}
