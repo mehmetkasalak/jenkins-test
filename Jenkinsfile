@@ -1,4 +1,5 @@
 node {
+	String jenkinsFile
 	boolean hasWebChange = false
 	boolean hasAppChange = false
    	stage("Determine build file") {
@@ -23,11 +24,14 @@ node {
 	}
 	if(hasAppChange){
 		echo "Has App Change"
-		load "Jenkinsfile.App"
+		jenkinsFile = "Jenkinsfile.App"
+		load jenkinsFile
 	}
+	
 	
 	if(hasWebChange){
 		echo "Has Web Change"
-		load "Jenkinsfile.Web"
+		jenkinsFile = "Jenkinsfile.Web"
+		load jenkinsFile
 	}
 }
