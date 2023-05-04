@@ -25,7 +25,11 @@ pipeline {
 					for (entries in changeLogSets) {
 						for (entry in entries) {
 							for (file in entry.affectedFiles) {
-								echo "Found changed file: ${file}"
+								echo "Found changed file: ${file.path}"
+								changedFiles.add("${file.path}")
+							}
+							for (aFile in entry.getAffectedPaths()) {
+								echo "Found changed file: ${aFile}"
 								changedFiles.add("${file.path}")
 							}
 						}
