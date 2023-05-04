@@ -1,12 +1,5 @@
-def run() {
-    node('my-pipeline-CI'){
-        stage('CI Stage') {
-            echo 'I am the first CI'
-        }
-        stage('CI Stage 2') {
-            echo 'I am the second CI'
-        }
-	}
+ node('my-pipeline-CI'){
+    stage('CI Stage') {
+        echo 'I am the first CI'
+    }
 }
-
-return this
