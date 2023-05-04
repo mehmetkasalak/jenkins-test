@@ -1,12 +1,5 @@
-pipeline {
-    agent any
-    stages {
-	   stage('Web Build') {
-			steps{
-				script{
-					echo "I am building Web"
-				}
-			}
-		}
+ node{
+    stage() {
+        echo 'I am the WEB'
     }
 }
