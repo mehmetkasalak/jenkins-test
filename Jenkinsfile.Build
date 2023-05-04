@@ -19,7 +19,21 @@ pipeline {
 	   stage('Parallel Stage') {
 			steps{
 				script{
-					parallel (build.steps)
+					//parallel (build.steps)
+					def changedFiles = []
+					def changeLogSets = currentBuild.changeSets
+					for (entries in changeLogSets) {
+						for (entry in entries) {
+							for (file in entry.affectedFiles) {
+								echo "Found changed file: ${file.path}"
+								changedFiles.add("${file.path}")
+							}
+						}
+					}
+					
+					changedFiles.each{file -> 
+						echo file
+					}
 				}
 			}
 		}
