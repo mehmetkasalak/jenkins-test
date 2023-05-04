@@ -31,5 +31,6 @@ node {
 			jenkinsFile = "Jenkinsfile.Web"
 		}
 	}
-	load jenkinsFile
+	if(jenkinsFile != null)
+		load jenkinsFile
 }
