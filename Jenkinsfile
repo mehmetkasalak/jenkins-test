@@ -1,6 +1,3 @@
-def run(){
-
-}
 node {
 	String jenkinsFile
    	stage("Determine build file") {
