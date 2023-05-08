@@ -4,6 +4,7 @@ pipeline {
 	   stage('Decision Stage') {
 			steps{
 				script{
+					def jenkinsFile
 					def hasWebChange = false
 					def hasAppChange = false
 					def changedFiles = []
@@ -11,6 +12,7 @@ pipeline {
 					for (entries in changeLogSets) {
 						for (entry in entries) {
 							for (file in entry.affectedFiles) {
+								echo "${file.path}"
 								changedFiles.add("${file.path}")
 							}
 						}
@@ -22,13 +24,18 @@ pipeline {
 
 					if(hasAppChange){
 						echo "Has App Change"
-						load "Jenkinsfile.App"
+						jenkinsFile = 'Jenkinsfile.App'
 					}
+					if(jenkinsFile != null)
+						load jenkinsFile
 
 					if(hasWebChange){
 						echo "Has Web Change"
-						load "Jenkinsfile.Web"
+						jenkinsFile = 'Jenkinsfile.Web'
 					}
+
+					if(jenkinsFile != null)
+						load jenkinsFile
 				}
 			}
 		}
