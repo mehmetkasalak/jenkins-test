@@ -4,8 +4,8 @@ pipeline {
 	   stage('Decision Stage') {
 			steps{
 				script{
-					boolean hasWebChange = false
-					boolean hasAppChange = false
+					def hasWebChange = false
+					def hasAppChange = false
 					def changedFiles = []
 					def changeLogSets = currentBuild.changeSets
 					for (entries in changeLogSets) {
