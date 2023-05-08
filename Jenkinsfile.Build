@@ -12,7 +12,6 @@ pipeline {
 					for (entries in changeLogSets) {
 						for (entry in entries) {
 							for (file in entry.affectedFiles) {
-								echo "${file.path}"
 								changedFiles.add("${file.path}")
 							}
 						}
