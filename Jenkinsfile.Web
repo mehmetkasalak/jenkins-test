@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Web Stage') {
             steps {
-                echo 'I am Web'
+                echo "The First Web Stage"
             }
         }
     }
