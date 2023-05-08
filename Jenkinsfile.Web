@@ -1,5 +1,15 @@
- node{
-    stage('Web Stage ') {
-        echo 'I am the first CI'
+// node{
+//     stage('Web Stage ') {
+//         echo 'I am the first CI'
+//     }
+// }
+pipeline {
+    agent any
+    stages {
+        stage('Web Stage') {
+            steps {
+                echo 'I am Web'
+            }
+        }
     }
 }
