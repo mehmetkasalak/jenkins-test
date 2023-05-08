@@ -1,7 +1,7 @@
 node {
-	String jenkinsFile
-	boolean hasWebChange = false
-	boolean hasAppChange = false
+	def jenkinsFile
+	def hasWebChange = false
+	def hasAppChange = false
    	stage("Determine build file") {
 		// stage("Determine build file") {
 		// 	jenkinsFile = "Jenkinsfile.CI"
