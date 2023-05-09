@@ -3,7 +3,7 @@ def setProperties(){
         parameters([
              // Main pipeline parameters
             string(name: 'TIMEOUT', defaultValue: '270', description: 'Build timeout in minutes'),
-            choice(name: 'DEPLOYTO', choices: ['develop&qa', 'none', 'develop', 'qa', 'staging', 'production'], description: 'Which environment to deploy to after building'),
+            choice(name: 'DEPLOYTO', choices: ['none', 'develop&qa', 'develop', 'qa', 'staging', 'production'], description: 'Which environment to deploy to after building'),
             booleanParam(name: 'CLEAN_WORKSPACE', defaultValue: true, description: 'Clean Workspace when build finishes? (Uncheck just for testing purposes)')
 		])
     ])
