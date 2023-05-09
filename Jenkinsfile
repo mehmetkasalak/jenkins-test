@@ -1,5 +1,4 @@
 node {
-	def jenkinsFile
 	def hasWebChange = false
 	def hasAppChange = false
    	stage("Determine build file") {
@@ -24,16 +23,11 @@ node {
 	}
 	if(hasAppChange){
 		echo "Has App Change"
-		jenkinsFile = "Jenkinsfile.App"
+		load "Jenkinsfile.App"
 	}
-	if(jenkinsFile != null)
-		load jenkinsFile
-		
+			
 	if(hasWebChange){
 		echo "Has Web Change"
-		jenkinsFile = "Jenkinsfile.Web"
+		load "Jenkinsfile.Web"
 	}
-
-	if(jenkinsFile != null)
-		load jenkinsFile
 }
