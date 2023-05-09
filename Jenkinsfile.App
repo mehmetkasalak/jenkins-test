@@ -3,10 +3,10 @@ def build = [
         'Build Pips': {
             stage('Parallel'){
 				stage('In Parallel 1') {
-					echo "In Parallel App 1 ${params.TIMEOUT}" 
+					echo "In Parallel App 1 ${env.TIMEOUT}" 
 				}
 				stage('In Parallel 2') {
-					echo "In Parallel App 2 ${params.TIMEOUT}"
+					echo "In Parallel App 2 ${env.TIMEOUT}"
 				}
 			}
         }

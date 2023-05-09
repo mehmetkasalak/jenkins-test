@@ -11,12 +11,12 @@ def setProperties(){
 
 node {
 	setProperties()
-	def hasWebChange = false
-	def hasAppChange = false
 	timeout(time: params.TIMEOUT as int, unit: 'MINUTES'){
-		withEnv(['DISABLE_AUTH=true',
-				'DB_ENGINE=sqlite']) {
+		withEnv(["DISABLE_AUTH=true",
+				 "TIMEOUT=${params.TIMEOUT}"]) {
 			stage("Determine build file") {
+				def hasWebChange = false
+				def hasAppChange = false
 				def changedFiles = []
 				def changeLogSets = currentBuild.changeSets
 				for (entries in changeLogSets) {
