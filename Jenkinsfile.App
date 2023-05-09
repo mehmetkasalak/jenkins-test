@@ -3,10 +3,10 @@ def build = [
         'Build Pips': {
             stage('Parallel'){
 				stage('In Parallel 1') {
-					echo "In Parallel 1"
+					echo "In Parallel App 1"
 				}
 				stage('In Parallel 2') {
-					echo "In Parallel 2"
+					echo "In Parallel App 2"
 				}
 			}
         }
