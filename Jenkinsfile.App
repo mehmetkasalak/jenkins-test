@@ -15,6 +15,10 @@ def build = [
 
 pipeline {
     agent any
+    options {
+        timeout(time: params.TIMEOUT as int, unit: 'MINUTES')
+        parallelsAlwaysFailFast()
+    }
     stages {
         stage('App Parallel Stage') {
             steps{
