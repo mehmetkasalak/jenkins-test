@@ -7,7 +7,7 @@ def cloudPlatformVersion(){
 }
 
 def getCommitHashPart(){
-	echo "${env.GIT_VARS.GIT_COMMIT}"
+	echo "${env.GIT_VARS}"
 	return env.GIT_VARS.GIT_COMMIT.substring(0,6)
 }
 
