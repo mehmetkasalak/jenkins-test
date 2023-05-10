@@ -33,7 +33,7 @@ def sharedCommonModule(){
 }
 
 def isCriticalBranch(){
-    echo sharedCommonModule
+    echo sharedCommonModule()
     return sharedCommonModule().getRunAsBranch() ==~ 'master|develop|release/.*|hotfix/.*'
 }
 
