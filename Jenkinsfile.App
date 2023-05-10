@@ -17,10 +17,25 @@ def build = [
                 stage('In Parallel 5') {
 					echo "FULL_VERSION : ${env.FULL_VERSION}"
 				}
+                stage('In Parallel 5') {
+					echo "isCriticalBranch : ${isCriticalBranch()}"
+                    echo "getRunAsBranch : ${sharedCommonModule.getRunAsBranch()}"
+                    def res = sharedCommonModule.getRunAsBranch() ==~ 'master|develop|release/.*|hotfix/.*'
+                    echo "res : ${res}"
+                    def sharedCommonModule2 = evaluate readTrusted("sharedModules/common.groovy")                 
+                    def res2 = sharedCommonModule2.getRunAsBranch() ==~ 'master|develop|release/.*|hotfix/.*'
+                    echo "res2 : ${res2}"
+				}
 			}
         }
     ]
 ]
+
+def sharedCommonModule = evaluate readTrusted("sharedModules/common.groovy")
+
+def isCriticalBranch(){
+    return sharedCommonModule.getRunAsBranch() ==~ 'master|develop|release/.*|hotfix/.*'
+}
 
 pipeline {
     agent any
