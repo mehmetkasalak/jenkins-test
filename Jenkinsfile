@@ -2,10 +2,6 @@
 // Utils
 //
 
-def cloudPlatformVersion(){
-    return '23.2.2.0'
-}
-
 def getCommitHashPart(){
 	echo "${env.GIT_COMMIT}"
 	return env.GIT_COMMIT.substring(0,6)
@@ -98,8 +94,7 @@ node(linuxAgentLabel) {
 		def hasWebChange = false
         def hasAppChange = false
 		def commonModule = evaluate readTrusted("common.groovy")
-		echo commonModule.cloudPlatformVersion()
-		
+
         setProperties()
 		setEnvironments(commonModule)
 
