@@ -29,11 +29,15 @@ def build = [
     ]
 ]
 
-def isCriticalBranch(){
-    return sharedCommonModule.getRunAsBranch() ==~ 'master|develop|release/.*|hotfix/.*'
+
+
+def sharedCommonModule(){
+    return evaluate readTrusted("common.groovy")
 }
 
-def sharedCommonModule
+def isCriticalBranch(){
+    return sharedCommonModule().getRunAsBranch() ==~ 'master|develop|release/.*|hotfix/.*'
+}
 
 pipeline {
     agent any
@@ -45,7 +49,6 @@ pipeline {
         stage('App Parallel Stage') {
             steps{
 				script{
-                    sharedCommonModule = evaluate readTrusted("common.groovy")
 					parallel (build.steps)
 				}
 			}
