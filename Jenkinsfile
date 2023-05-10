@@ -83,7 +83,7 @@ def setProperties(){
     ])
 }
 
-def setEnvironments(){
+def setEnvironments(commonModule){
 	scmVars = checkout scm
 	env.GIT_COMMIT = scmVars.GIT_COMMIT
 	env.BRANCH_NAME = scmVars.GIT_BRANCH
