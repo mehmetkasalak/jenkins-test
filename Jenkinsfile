@@ -93,10 +93,7 @@ def setEnvironments(){
 
 def linuxAgentLabel = 'a'
 
-node {
-	agent {
-        label linuxAgentLabel
-    }
+node(linuxAgentLabel) {
     try{
 		def hasWebChange = false
         def hasAppChange = false
