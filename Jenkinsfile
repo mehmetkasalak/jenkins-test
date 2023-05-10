@@ -7,12 +7,11 @@ def cloudPlatformVersion(){
 }
 
 def getCommitHashPart(){
-	def gitHash
-	node {
-		withCheckout(scm) {
-			gitHash = env.GIT_COMMIT.substring(0,6)
-		}
-	}
+	echo "GIT_COMMIT: ${env.GIT_COMMIT}"
+	echo "BRANCH_NAME: ${env.BRANCH_NAME}"
+	
+	def gitHash = "test"
+	// env.GIT_COMMIT.substring(0,6)
 	return gitHash
 }
 
