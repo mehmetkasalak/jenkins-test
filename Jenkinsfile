@@ -6,10 +6,10 @@ def cloudPlatformVersion(){
     return '23.2.2.0'
 }
 
-@NonCPS
 def getCommitHashPart(){
-	echo "GIT_COMMIT: ${env.GIT_COMMIT}"
-	echo "BRANCH_NAME: ${env.BRANCH_NAME}"
+	def scmVars = checkout scm
+	echo "GIT_COMMIT: ${scmVars.GIT_COMMIT}"
+	echo "BRANCH_NAME: ${scmVars.BRANCH_NAME}"
 	
 	def gitHash = "test"
 	// env.GIT_COMMIT.substring(0,6)
@@ -28,6 +28,7 @@ def shouldCleanWorkspace(){
 // cleans up the workspace
 def cleanupWorkspace(){
     if(shouldCleanWorkspace()){
+		echo "cleanWs()"
         cleanWs()
     }
 }
@@ -89,6 +90,7 @@ def setProperties(){
 
 node {
     try{
+		//def scmVars = checkout scm
         setProperties()
         def hasWebChange = false
         def hasAppChange = false
