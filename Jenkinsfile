@@ -99,6 +99,12 @@ node(linuxAgentLabel) {
         def hasAppChange = false
 		setEnvironments()
         setProperties()
+		def exampleModule = evaluate readTrusted("common.groovy")
+		def res = exampleModule.test()
+		echo res
+		def vers = exampleModule.cloudPlatformVersion()
+		echo vers
+
         timeout(time: params.TIMEOUT as int, unit: 'MINUTES'){
             withEnv(["VERSION_REVISION=${env.GIT_COMMIT_HASH_PART}${getSuffix(getRunAsBranch())}",
                      "FULL_VERSION=${env.CLOUD_PLATFORM_VERSION}.${env.GIT_COMMIT_HASH_PART}${getSuffix(getRunAsBranch())}",
