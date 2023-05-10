@@ -22,7 +22,7 @@ def build = [
                     echo "getRunAsBranch : ${sharedCommonModule.getRunAsBranch()}"
                     def res = sharedCommonModule.getRunAsBranch() ==~ 'master|develop|release/.*|hotfix/.*'
                     echo "res : ${res}"
-                    def sharedCommonModule2 = evaluate readTrusted("sharedModules/common.groovy")                 
+                    def sharedCommonModule2 = evaluate readTrusted("common.groovy")                 
                     def res2 = sharedCommonModule2.getRunAsBranch() ==~ 'master|develop|release/.*|hotfix/.*'
                     echo "res2 : ${res2}"
 				}
@@ -31,7 +31,7 @@ def build = [
     ]
 ]
 
-def sharedCommonModule = evaluate readTrusted("sharedModules/common.groovy")
+def sharedCommonModule = evaluate readTrusted("common.groovy")
 
 def isCriticalBranch(){
     return sharedCommonModule.getRunAsBranch() ==~ 'master|develop|release/.*|hotfix/.*'
