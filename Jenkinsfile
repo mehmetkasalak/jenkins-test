@@ -18,7 +18,7 @@ def setEnvironments(commonModule){
 	env.GIT_COMMIT = scmVars.GIT_COMMIT
 	env.BRANCH_NAME = scmVars.GIT_BRANCH
 	env.CLOUD_PLATFORM_VERSION = commonModule.cloudPlatformVersion()
-	env.GIT_COMMIT_HASH_PART = "h${getCommitHashPart()}"
+	env.GIT_COMMIT_HASH_PART = "h${commonModule.getCommitHashPart()}"
 	env.SUFFIX_WITH_BRANCH = "${commonModule.getSuffix(commonModule.getRunAsBranch())}"
 }
 
