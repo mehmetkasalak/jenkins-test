@@ -7,7 +7,7 @@ def cloudPlatformVersion(){
 }
 
 def getCommitHashPart(){
-	return scmVars.GIT_COMMIT.substring(0,6)
+	return env.GIT_VARS.GIT_COMMIT.substring(0,6)
 }
 
 //
@@ -33,7 +33,7 @@ def cleanupWorkspace(){
 
 // Run as branch as defined in the Jenkins buidl parameter
 def getRunAsBranch(){
-    def runAsBranch=scmVars.GIT_BRANCH
+    def runAsBranch=env.GIT_VARS.GIT_BRANCH
     if(params.RUN_AS_BRANCH != null && params.RUN_AS_BRANCH.trim().length() != 0){
         runAsBranch=params.RUN_AS_BRANCH
     }
@@ -83,14 +83,14 @@ def setProperties(){
 }
 
 node {
-	def scmVars
     try{
 		scmVars = checkout scm
         setProperties()
         def hasWebChange = false
         def hasAppChange = false
         timeout(time: params.TIMEOUT as int, unit: 'MINUTES'){
-            withEnv(["CLOUD_PLATFORM_VERSION=${cloudPlatformVersion()}",
+            withEnv(["GIT_VARS=${scmVars}",
+					 "CLOUD_PLATFORM_VERSION=${cloudPlatformVersion()}",
                      "GIT_COMMIT_HASH_PART=h${getCommitHashPart()}",
                      "VERSION_REVISION=${getCommitHashPart()}${getSuffix(getRunAsBranch())}",
                      "FULL_VERSION=${cloudPlatformVersion()}.${getCommitHashPart()}${getSuffix(getRunAsBranch())}",
