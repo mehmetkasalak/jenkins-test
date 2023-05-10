@@ -65,6 +65,6 @@ node(linuxAgentLabel) {
         }
     }
     finally {
-        cleanupWorkspace()
+        commonModule.cleanupWorkspace()
     }
 }
