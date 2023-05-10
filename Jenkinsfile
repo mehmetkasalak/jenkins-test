@@ -23,18 +23,6 @@ def shouldCleanWorkspace(){
 def cleanupWorkspace(){
     if(shouldCleanWorkspace()){
         cleanWs()
-        cleanupDockerImages()
-    }
-}
-
-// cleans up the docker images for the current version
-def cleanupDockerImages(){
-    script{
-        // Define Filters
-        def isOurs = "\"label=com.mehmet.devops.image\""
-        def isCurrentSession = "\"label=com.mehmet.devops.session=${env.SESSION_ID}\""
-
-       	sh "echo test"
     }
 }
 
