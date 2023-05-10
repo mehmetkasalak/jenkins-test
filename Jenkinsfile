@@ -20,6 +20,7 @@ def setEnvironments(commonModule){
 	env.CLOUD_PLATFORM_VERSION = commonModule.cloudPlatformVersion()
 	env.GIT_COMMIT_HASH_PART = "h${commonModule.getCommitHashPart()}"
 	env.SUFFIX_WITH_BRANCH = "${commonModule.getSuffix(commonModule.getRunAsBranch())}"
+    env.COMMON_MODULE = commonModule
 }
 
 
@@ -37,6 +38,8 @@ node(linuxAgentLabel) {
                      "SESSION_ID=${env.CLOUD_PLATFORM_VERSION}.${env.GIT_COMMIT_HASH_PART}${env.SUFFIX_WITH_BRANCH}--${env.BUILD_ID}"
                     ]) {
                 stage("Determine build file") {
+                    echo env.COMMON_MODULE.cloudPlatformVersion()
+
                     def changedFiles = []
                     def changeLogSets = currentBuild.changeSets
                     for (entries in changeLogSets) {
