@@ -94,7 +94,7 @@ node {
                      "GIT_COMMIT_HASH_PART=h${getCommitHashPart()}",
                     "VERSION_REVISION=${getCommitHashPart()}${getSuffix(getRunAsBranch())}",
                     "FULL_VERSION=${cloudPlatformVersion()}.${getCommitHashPart()}${getSuffix(getRunAsBranch())}",
-                    "SESSION_ID=${env.FULL_VERSION}--${env.BUILD_ID}"
+                    "SESSION_ID=${cloudPlatformVersion()}.${getCommitHashPart()}${getSuffix(getRunAsBranch())}--${env.BUILD_ID}"
                     ]) {
                 stage("Determine build file") {
                     def changedFiles = []
