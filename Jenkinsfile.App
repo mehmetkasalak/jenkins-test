@@ -6,7 +6,16 @@ def build = [
 					echo "In Parallel App 1 : ${params.TIMEOUT}" 
 				}
 				stage('In Parallel 2') {
-					echo "In Parallel App 2 : ${env.DISABLE_AUTH}"
+					echo "SESSION_ID : ${env.SESSION_ID}"
+				}
+                stage('In Parallel 3') {
+					echo "CLOUD_PLATFORM_VERSION : ${env.CLOUD_PLATFORM_VERSION}"
+				}
+                stage('In Parallel 4') {
+					echo "GIT_COMMIT_HASH_PART : ${env.GIT_COMMIT_HASH_PART}"
+				}
+                stage('In Parallel 5') {
+					echo "FULL_VERSION : ${env.FULL_VERSION}"
 				}
 			}
         }
