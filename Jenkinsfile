@@ -6,6 +6,7 @@ def cloudPlatformVersion(){
     return '23.2.2.0'
 }
 
+@NonCPS
 def getCommitHashPart(){
 	echo "GIT_COMMIT: ${env.GIT_COMMIT}"
 	echo "BRANCH_NAME: ${env.BRANCH_NAME}"
