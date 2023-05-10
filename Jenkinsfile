@@ -24,12 +24,11 @@ def setEnvironments(commonModule){
 
 
 node(linuxAgentLabel) {
+	def commonModule = evaluate readTrusted("common.groovy")
     try{
 		def hasWebChange = false
         def hasAppChange = false
-		def commonModule = evaluate readTrusted("common.groovy")
-
-        setProperties()
+		setProperties()
 		setEnvironments(commonModule)
 
         timeout(time: params.TIMEOUT as int, unit: 'MINUTES'){
