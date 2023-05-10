@@ -95,8 +95,8 @@ node {
         timeout(time: params.TIMEOUT as int, unit: 'MINUTES'){
             withEnv(["CLOUD_PLATFORM_VERSION=${cloudPlatformVersion()}",
                      "GIT_COMMIT_HASH_PART=h${getCommitHashPart()}",
-                     "VERSION_REVISION=${getCommitHashPart()}${getSuffix(getRunAsBranch())}",
-                     "FULL_VERSION=${env.CLOUD_PLATFORM_VERSION}.${getCommitHashPart()}${getSuffix(getRunAsBranch())}",
+                    //  "VERSION_REVISION=${getCommitHashPart()}${getSuffix(getRunAsBranch())}",
+                    //  "FULL_VERSION=${env.CLOUD_PLATFORM_VERSION}.${getCommitHashPart()}${getSuffix(getRunAsBranch())}",
                      "SESSION_ID=${env.FULL_VERSION}--${env.BUILD_ID}"
                     ]) {
                 stage("Determine build file") {
