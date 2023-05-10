@@ -2,13 +2,11 @@
 // Utils
 //
 
-def scmVars
-
 def cloudPlatformVersion(){
     return '23.2.2.0'
 }
 
-def getCommitHashPart(scmVars){
+def getCommitHashPart(){
 	return scmVars.GIT_COMMIT.substring(0,6)
 }
 
@@ -34,7 +32,7 @@ def cleanupWorkspace(){
 //
 
 // Run as branch as defined in the Jenkins buidl parameter
-def getRunAsBranch(scmVars){
+def getRunAsBranch(){
     def runAsBranch=scmVars.GIT_BRANCH
     if(params.RUN_AS_BRANCH != null && params.RUN_AS_BRANCH.trim().length() != 0){
         runAsBranch=params.RUN_AS_BRANCH
@@ -85,6 +83,7 @@ def setProperties(){
 }
 
 node {
+	def scmVars
     try{
 		scmVars = checkout scm
         setProperties()
@@ -93,9 +92,9 @@ node {
         timeout(time: params.TIMEOUT as int, unit: 'MINUTES'){
             withEnv(["CLOUD_PLATFORM_VERSION=${cloudPlatformVersion()}",
                      "GIT_COMMIT_HASH_PART=h${getCommitHashPart()}",
-                    "VERSION_REVISION=${getCommitHashPart(scmVars)}${getSuffix(getRunAsBranch())}",
-                    "FULL_VERSION=${cloudPlatformVersion()}.${getCommitHashPart(scmVars)}${getSuffix(getRunAsBranch(scmVars))}",
-                    "SESSION_ID=${cloudPlatformVersion()}.${getCommitHashPart(scmVars)}${getSuffix(getRunAsBranch(scmVars))}--${env.BUILD_ID}"
+                     "VERSION_REVISION=${getCommitHashPart()}${getSuffix(getRunAsBranch())}",
+                     "FULL_VERSION=${cloudPlatformVersion()}.${getCommitHashPart()}${getSuffix(getRunAsBranch())}",
+                     "SESSION_ID=${cloudPlatformVersion()}.${getCommitHashPart()}${getSuffix(getRunAsBranch())}--${env.BUILD_ID}"
                     ]) {
                 stage("Determine build file") {
                     def changedFiles = []

@@ -15,6 +15,7 @@ node {
 	def hasAppChange = false
 	timeout(time: params.TIMEOUT as int, unit: 'MINUTES'){
 		withEnv(["DISABLE_AUTH=true",
+				 "GIT_ENV=${env.GIT_COMMIT}",
 				 "TIMEOUT=${params.TIMEOUT}"]) {
 			stage("Determine build file") {
 				def changedFiles = []
