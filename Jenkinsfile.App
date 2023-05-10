@@ -19,10 +19,6 @@ def build = [
 				}
                 stage('In Parallel 5') {
 					echo "isCriticalBranch : ${isCriticalBranch()}"
-                    def sharedCommonModule2 = evaluate readTrusted("common.groovy")
-                    echo "getRunAsBranch : ${sharedCommonModule2.getRunAsBranch()}"
-                    def res2 = sharedCommonModule2.getRunAsBranch() ==~ 'master|develop|release/.*|hotfix/.*'
-                    echo "res2 : ${res2}"
 				}
 			}
         }
@@ -37,6 +33,7 @@ def sharedCommonModule(){
 }
 
 def isCriticalBranch(){
+    echo sharedCommonModule
     return sharedCommonModule().getRunAsBranch() ==~ 'master|develop|release/.*|hotfix/.*'
 }
 
