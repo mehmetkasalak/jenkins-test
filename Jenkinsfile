@@ -2,7 +2,7 @@
 // Utils
 //
 
-def scmVars = checkout scm
+def scmVars
 
 def cloudPlatformVersion(){
     return '23.2.2.0'
@@ -86,6 +86,7 @@ def setProperties(){
 
 node {
     try{
+		scmVars = checkout scm
         setProperties()
         def hasWebChange = false
         def hasAppChange = false
