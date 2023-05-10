@@ -7,6 +7,7 @@ def cloudPlatformVersion(){
 }
 
 def getCommitHashPart(){
+	echo "${env.GIT_VARS.GIT_COMMIT}"
 	return env.GIT_VARS.GIT_COMMIT.substring(0,6)
 }
 
@@ -84,13 +85,12 @@ def setProperties(){
 
 node {
     try{
-		scmVars = checkout scm
+		env.GIT_VARS = checkout scm
         setProperties()
         def hasWebChange = false
         def hasAppChange = false
         timeout(time: params.TIMEOUT as int, unit: 'MINUTES'){
-            withEnv(["GIT_VARS=${scmVars}",
-					 "CLOUD_PLATFORM_VERSION=${cloudPlatformVersion()}",
+            withEnv(["CLOUD_PLATFORM_VERSION=${cloudPlatformVersion()}",
                      "GIT_COMMIT_HASH_PART=h${getCommitHashPart()}",
                      "VERSION_REVISION=${getCommitHashPart()}${getSuffix(getRunAsBranch())}",
                      "FULL_VERSION=${cloudPlatformVersion()}.${getCommitHashPart()}${getSuffix(getRunAsBranch())}",
