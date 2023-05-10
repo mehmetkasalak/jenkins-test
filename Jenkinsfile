@@ -7,8 +7,8 @@ def cloudPlatformVersion(){
 }
 
 def getCommitHashPart(){
-	echo "${env.GIT_VARS}"
-	return env.GIT_VARS.GIT_COMMIT.substring(0,6)
+	echo "${env.GIT_COMMIT}"
+	return env.GIT_COMMIT.substring(0,6)
 }
 
 //
@@ -34,7 +34,7 @@ def cleanupWorkspace(){
 
 // Run as branch as defined in the Jenkins buidl parameter
 def getRunAsBranch(){
-    def runAsBranch=env.GIT_VARS.GIT_BRANCH
+    def runAsBranch=env.BRANCH_NAME
     if(params.RUN_AS_BRANCH != null && params.RUN_AS_BRANCH.trim().length() != 0){
         runAsBranch=params.RUN_AS_BRANCH
     }
@@ -83,18 +83,24 @@ def setProperties(){
     ])
 }
 
+def setEnvironments(){
+	scmVars = checkout scm
+	env.GIT_COMMIT = scmVars.GIT_COMMIT
+	env.BRANCH_NAME = scmVars.GIT_BRANCH
+	env.CLOUD_PLATFORM_VERSION = cloudPlatformVersion()
+	env.GIT_COMMIT_HASH_PART = "h${getCommitHashPart()}"
+}
+
 node {
     try{
-		env.GIT_VARS = checkout scm
-        setProperties()
-        def hasWebChange = false
+		def hasWebChange = false
         def hasAppChange = false
+		setEnvironments()
+        setProperties()
         timeout(time: params.TIMEOUT as int, unit: 'MINUTES'){
-            withEnv(["CLOUD_PLATFORM_VERSION=${cloudPlatformVersion()}",
-                     "GIT_COMMIT_HASH_PART=h${getCommitHashPart()}",
-                     "VERSION_REVISION=${getCommitHashPart()}${getSuffix(getRunAsBranch())}",
-                     "FULL_VERSION=${cloudPlatformVersion()}.${getCommitHashPart()}${getSuffix(getRunAsBranch())}",
-                     "SESSION_ID=${cloudPlatformVersion()}.${getCommitHashPart()}${getSuffix(getRunAsBranch())}--${env.BUILD_ID}"
+            withEnv(["VERSION_REVISION=${env.GIT_COMMIT_HASH_PART}${getSuffix(getRunAsBranch())}",
+                     "FULL_VERSION=${env.CLOUD_PLATFORM_VERSION}.${env.GIT_COMMIT_HASH_PART}${getSuffix(getRunAsBranch())}",
+                     "SESSION_ID=${env.CLOUD_PLATFORM_VERSION}.${env.GIT_COMMIT_HASH_PART}${getSuffix(getRunAsBranch())}--${env.BUILD_ID}"
                     ]) {
                 stage("Determine build file") {
                     def changedFiles = []
