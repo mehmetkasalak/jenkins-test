@@ -9,11 +9,9 @@ def cloudPlatformVersion(){
 def getCommitHashPart(){
 	def scmVars = checkout scm
 	echo "GIT_COMMIT: ${scmVars.GIT_COMMIT}"
-	echo "BRANCH_NAME: ${scmVars.BRANCH_NAME}"
+	echo "GIT_BRANCH: ${scmVars.GIT_BRANCH}"
 	
-	def gitHash = "test"
-	// env.GIT_COMMIT.substring(0,6)
-	return gitHash
+	return scmVars.GIT_COMMIT.substring(0,6)
 }
 
 //
@@ -39,7 +37,8 @@ def cleanupWorkspace(){
 
 // Run as branch as defined in the Jenkins buidl parameter
 def getRunAsBranch(){
-    def runAsBranch=env.BRANCH_NAME
+	def scmVars = checkout scm
+    def runAsBranch=scmVars.GIT_BRANCH
     if(params.RUN_AS_BRANCH != null && params.RUN_AS_BRANCH.trim().length() != 0){
         runAsBranch=params.RUN_AS_BRANCH
     }
@@ -90,7 +89,6 @@ def setProperties(){
 
 node {
     try{
-		//def scmVars = checkout scm
         setProperties()
         def hasWebChange = false
         def hasAppChange = false
