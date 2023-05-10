@@ -32,7 +32,8 @@ def build = [
 
 
 def sharedCommonModule(){
-    return evaluate readTrusted("common.groovy")
+    def sharedModule = evaluate readTrusted("common.groovy")
+    return sharedModule
 }
 
 def isCriticalBranch(){
