@@ -1,77 +1,10 @@
-//
-// Utils
-//
+// Linux Agent Label
+def linuxAgentLabel = 'linux-burst'
 
-def getCommitHashPart(){
-	echo "${env.GIT_COMMIT}"
-	return env.GIT_COMMIT.substring(0,6)
-}
-
-//
-// Reusable Steps
-//
-
-// Only when true we should run clean the Jenkins workspace in the agents
-def shouldCleanWorkspace(){
-    return params.CLEAN_WORKSPACE
-}
-
-// cleans up the workspace
-def cleanupWorkspace(){
-    if(shouldCleanWorkspace()){
-		echo "cleanWs()"
-        cleanWs()
-    }
-}
-
-//
-// Branch methods
-//
-
-// Run as branch as defined in the Jenkins buidl parameter
-def getRunAsBranch(){
-    def runAsBranch=env.BRANCH_NAME
-    if(params.RUN_AS_BRANCH != null && params.RUN_AS_BRANCH.trim().length() != 0){
-        runAsBranch=params.RUN_AS_BRANCH
-    }
-    return runAsBranch
-}
-
-// Get the branch suffix,
-// ex: develop -> '-dev'
-// release -> '-rc'
-// hotfix -> '-hotfix'
-// PR -> '-pr'
-// feature/CP-123 -> '-cp-123'
-// master -> '' 
-def getSuffix(branchName) {
-    def suffix = ''
-    switch(branchName.split('/')[0]) {
-        case 'master':
-            break
-        case 'develop':
-            suffix = '-dev'
-            break
-        case 'release':
-            suffix = '-rc'
-            break
-        case 'hotfix':
-            suffix = '-hotfix'
-            break
-        default:
-            if (branchName.startsWith('PR-')) {
-                suffix = "-${branchName.toLowerCase()}"
-            } else {
-                suffix = branchName.contains('/') ? "-${branchName.split('/')[1]}" : "-${branchName}"
-            }
-    }
-    return suffix.toLowerCase()
-}
-
+// Set Parameters of Build Pipeline
 def setProperties(){
     properties([
         parameters([
-             // Main pipeline parameters
             string(name: 'TIMEOUT', defaultValue: '270', description: 'Build timeout in minutes'),
             choice(name: 'DEPLOYTO', choices: ['none', 'develop', 'qa', 'staging', 'production'], description: 'Which environment to deploy to after building'),
             booleanParam(name: 'CLEAN_WORKSPACE', defaultValue: true, description: 'Clean Workspace when build finishes? (Uncheck just for testing purposes)')
@@ -79,15 +12,16 @@ def setProperties(){
     ])
 }
 
+// set Environment variables
 def setEnvironments(commonModule){
 	scmVars = checkout scm
 	env.GIT_COMMIT = scmVars.GIT_COMMIT
 	env.BRANCH_NAME = scmVars.GIT_BRANCH
 	env.CLOUD_PLATFORM_VERSION = commonModule.cloudPlatformVersion()
 	env.GIT_COMMIT_HASH_PART = "h${getCommitHashPart()}"
+	env.SUFFIX_WITH_BRANCH = "${commonModule.getSuffix(commonModule.getRunAsBranch())}"
 }
 
-def linuxAgentLabel = 'linuxAgentLabel'
 
 node(linuxAgentLabel) {
     try{
@@ -99,9 +33,9 @@ node(linuxAgentLabel) {
 		setEnvironments(commonModule)
 
         timeout(time: params.TIMEOUT as int, unit: 'MINUTES'){
-            withEnv(["VERSION_REVISION=${env.GIT_COMMIT_HASH_PART}${getSuffix(getRunAsBranch())}",
-                     "FULL_VERSION=${env.CLOUD_PLATFORM_VERSION}.${env.GIT_COMMIT_HASH_PART}${getSuffix(getRunAsBranch())}",
-                     "SESSION_ID=${env.CLOUD_PLATFORM_VERSION}.${env.GIT_COMMIT_HASH_PART}${getSuffix(getRunAsBranch())}--${env.BUILD_ID}"
+            withEnv(["VERSION_REVISION=${env.GIT_COMMIT_HASH_PART}${env.SUFFIX_WITH_BRANCH}",
+                     "FULL_VERSION=${env.CLOUD_PLATFORM_VERSION}.${env.GIT_COMMIT_HASH_PART}${env.SUFFIX_WITH_BRANCH}",
+                     "SESSION_ID=${env.CLOUD_PLATFORM_VERSION}.${env.GIT_COMMIT_HASH_PART}${env.SUFFIX_WITH_BRANCH}--${env.BUILD_ID}"
                     ]) {
                 stage("Determine build file") {
                     def changedFiles = []
