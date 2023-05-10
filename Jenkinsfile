@@ -91,7 +91,12 @@ def setEnvironments(){
 	env.GIT_COMMIT_HASH_PART = "h${getCommitHashPart()}"
 }
 
+def linuxAgentLabel = 'linuxAgentLabel'
+
 node {
+	agent {
+        label linuxAgentLabel
+    }
     try{
 		def hasWebChange = false
         def hasAppChange = false
