@@ -87,7 +87,7 @@ def setEnvironments(){
 	scmVars = checkout scm
 	env.GIT_COMMIT = scmVars.GIT_COMMIT
 	env.BRANCH_NAME = scmVars.GIT_BRANCH
-	env.CLOUD_PLATFORM_VERSION = cloudPlatformVersion()
+	env.CLOUD_PLATFORM_VERSION = commonModule.cloudPlatformVersion()
 	env.GIT_COMMIT_HASH_PART = "h${getCommitHashPart()}"
 }
 
@@ -97,13 +97,11 @@ node(linuxAgentLabel) {
     try{
 		def hasWebChange = false
         def hasAppChange = false
-		setEnvironments()
+		def commonModule = evaluate readTrusted("common.groovy")
+		echo commonModule.cloudPlatformVersion()
+		
         setProperties()
-		def exampleModule = evaluate readTrusted("common.groovy")
-		def res = exampleModule.test()
-		echo res
-		def vers = exampleModule.cloudPlatformVersion()
-		echo vers
+		setEnvironments(commonModule)
 
         timeout(time: params.TIMEOUT as int, unit: 'MINUTES'){
             withEnv(["VERSION_REVISION=${env.GIT_COMMIT_HASH_PART}${getSuffix(getRunAsBranch())}",
