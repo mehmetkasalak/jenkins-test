@@ -2,12 +2,13 @@
 // Utils
 //
 
+def scmVars = checkout scm
+
 def cloudPlatformVersion(){
     return '23.2.2.0'
 }
 
 def getCommitHashPart(){
-	def scmVars = checkout scm
 	return scmVars.GIT_COMMIT.substring(0,6)
 }
 
@@ -34,7 +35,6 @@ def cleanupWorkspace(){
 
 // Run as branch as defined in the Jenkins buidl parameter
 def getRunAsBranch(){
-	def scmVars = checkout scm
     def runAsBranch=scmVars.GIT_BRANCH
     if(params.RUN_AS_BRANCH != null && params.RUN_AS_BRANCH.trim().length() != 0){
         runAsBranch=params.RUN_AS_BRANCH
