@@ -91,7 +91,7 @@ def setEnvironments(){
 	env.GIT_COMMIT_HASH_PART = "h${getCommitHashPart()}"
 }
 
-def linuxAgentLabel = 'linuxAgentLabel'
+def linuxAgentLabel = 'a'
 
 node {
 	agent {
