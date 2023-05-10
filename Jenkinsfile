@@ -8,8 +8,10 @@ def cloudPlatformVersion(){
 
 def getCommitHashPart(){
 	def gitHash
-	withCheckout(scm) {
-    	gitHash = env.GIT_COMMIT.substring(0,6)
+	node {
+		withCheckout(scm) {
+			gitHash = env.GIT_COMMIT.substring(0,6)
+		}
 	}
 	return gitHash
 }
