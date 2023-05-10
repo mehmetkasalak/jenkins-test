@@ -19,9 +19,9 @@ def build = [
 				}
                 stage('In Parallel 5') {
 					echo "isCriticalBranch : ${isCriticalBranch()}"
-                    def sharedCommonModule = evaluate readTrusted("common.groovy")
-                    echo "getRunAsBranch : ${sharedCommonModule.getRunAsBranch()}"
-                    def res2 = sharedCommonModule.getRunAsBranch() ==~ 'master|develop|release/.*|hotfix/.*'
+                    def sharedCommonModule2 = evaluate readTrusted("common.groovy")
+                    echo "getRunAsBranch : ${sharedCommonModule2.getRunAsBranch()}"
+                    def res2 = sharedCommonModule2.getRunAsBranch() ==~ 'master|develop|release/.*|hotfix/.*'
                     echo "res2 : ${res2}"
 				}
 			}
@@ -30,9 +30,10 @@ def build = [
 ]
 
 def isCriticalBranch(){
-    def sharedCommonModule = evaluate readTrusted("common.groovy")
     return sharedCommonModule.getRunAsBranch() ==~ 'master|develop|release/.*|hotfix/.*'
 }
+
+def sharedCommonModule
 
 pipeline {
     agent any
@@ -44,6 +45,7 @@ pipeline {
         stage('App Parallel Stage') {
             steps{
 				script{
+                    sharedCommonModule = evaluate readTrusted("common.groovy")
 					parallel (build.steps)
 				}
 			}
