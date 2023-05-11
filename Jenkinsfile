@@ -8,7 +8,6 @@ def setProperties(){
             string(name: 'TIMEOUT', defaultValue: '270', description: 'Build timeout in minutes'),
             choice(name: 'DEPLOYTO', choices: ['none', 'develop', 'qa', 'staging', 'production'], description: 'Which environment to deploy to after building'),
             booleanParam(name: 'CLEAN_WORKSPACE', defaultValue: true, description: 'Clean Workspace when build finishes? (Uncheck just for testing purposes)'),
-            booleanParam(name: 'PUBLISH_BACKEND_APIS_DOCKER_IMAGES', defaultValue: defaultShouldPublishLicensingApi(), description: 'Publish Backend APIs docker images?'),
 		])
     ])
 }
