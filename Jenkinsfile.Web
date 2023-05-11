@@ -1,4 +1,4 @@
-def shouldRunBuildStage {
+def shouldRunBuildStage() {
     return true
 }
 
