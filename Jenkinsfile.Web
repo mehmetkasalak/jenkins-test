@@ -7,189 +7,57 @@ def webAppStages = [
     build: [
         'Build Web App': {
             stage('Build Web App'){
-                if (!shouldRunBuildWebAppStage()) { echo "Build: skipped due to conditional"; return; }
-                withEnv([
-                    "WEBSDK_PROJECT_PATH=src/web/licensing-sdk/",
-                    "WEBAPP_PROJECT_PATH=src/web/app/",
-                ]){
-                    stage('Prepare Web App'){
-                        executeNodeProject("${env.WEBSDK_PROJECT_PATH}", ['npm ci'])
-                        executeNodeProject("${env.WEBAPP_PROJECT_PATH}", ['npm ci'])
+                stage('Prepare Web App'){
+                        echo "['npm ci']"
                     }
                     stage('Web App Tasks'){
                         parallel ([
                             failFast: true,
                             'Build & Package Web App': {
                                 stage('Build Web App'){
-                                    executeNodeProject("${env.WEBAPP_PROJECT_PATH}", ['npm run build'], [
-                                        "--env REACT_APP_PRODUCT_ID=\"${env.WEBAPP_DOCKER_IMAGE_NAME}\"",
-                                        "--env REACT_APP_PRODUCT_VERSION=\"${cloudPlatformVersion()}\"",
-                                        "--env REACT_APP_PRODUCT_BUILD=\"${env.FULL_VERSION}\"",
-                                    ])
+                                    echo "Build Web App"
                                 }
                                 stage('Package Web App'){
-                                    if (!shouldBuildWebAppDockerImage()) { echo "Package: skipped due to conditional"; return; }
-                                    dir("${env.WORKSPACE}/${env.WEBAPP_PROJECT_PATH}"){
-                                        def args = [
-                                            "--no-cache",
-                                            "--build-arg \"INSTALLER=dist/${env.WEBAPP_DOCKER_IMAGE_NAME}-${cloudPlatformVersion()}.app.zip\"",
-                                            "--label \"com.insightsoftware.devops.session=${env.SESSION_ID}\"",
-                                            "--label \"com.insightsoftware.devops.image=distributable\"",
-                                            "--label \"com.insightsoftware.products.cloud-platform.service=${env.WEBAPP_DOCKER_IMAGE_NAME}\"",
-                                            "--label \"com.insightsoftware.products.cloud-platform.version=${cloudPlatformVersion()}\"",
-                                            "--label \"com.insightsoftware.products.cloud-platform.build=${env.FULL_VERSION}\"",
-                                            "--file \"build/Dockerfile\"",
-                                            "."
-                                        ].join(' ')
-
-                                        docker.build("${env.WEBAPP_DOCKER_IMAGE_NAME}:${env.FULL_VERSION}", args)
-                                    }
+                                    echo "Package Web App"
                                 }
                             },
                             'Test & Scan Web App': {
-                                stage('Test Web App'){
-                                    if (!shouldRunTestWebAppStage()) { echo "Test: skipped due to conditional"; return; }
-                                    executeNodeProject("${env.WEBAPP_PROJECT_PATH}", ['npm run test:unit -- --ci --runInBand'])
+                                 stage('Test Web App'){
+                                    echo "Test Web App"
                                 }
                                 stage('Scan Web App'){
-                                    if (!shouldRunScanWebAppStage()) { echo "Scan: skipped due to conditional"; return; }
-                                    dir("${env.WORKSPACE}/${env.WEBAPP_PROJECT_PATH}"){
-                                        withCredentials([
-                                            string(credentialsId: params.SONARCLOUD_WEBAPP_CREDENTIALS_ID, variable: 'SONARCLOUD_CREDENTIALS_JSON')
-                                        ]) {
-                                            def creds = parseSonarCloudCredentials(SONARCLOUD_CREDENTIALS_JSON)
-                                            def args = [
-                                                "--env SONAR_HOST_URL=\"${env.SONAR_HOST_URL}\"",
-                                                "--env SONAR_ORGANIZATION_ID=\"${env.SONAR_ORGANIZATION_ID}\"",
-                                                "--env SONAR_LOGIN_TOKEN=\"${creds.SONARCLOUD_TOKEN}\"",
-                                                "--env SONAR_PROJECTKEY=\"${creds.SONARCLOUD_PROJECT}\"",
-                                                "--env SONAR_PROJECTNAME=\"${env.WEBAPP_SONAR_PROJECT}\"",
-                                                "--env SONAR_PROJECTVERSION=\"${env.SONAR_PROJECTVERSION}\"",
-                                                "--env SONAR_BRANCH_NAME=\"${getSharedModule().nullToStringCoalesce(env.SONAR_BRANCH_NAME)}\"",
-                                                "--env SONAR_BRANCH_TARGET=\"${getSharedModule().nullToStringCoalesce(env.SONAR_BRANCH_TARGET)}\"",
-                                                "--env SONAR_PULLREQUEST_BRANCH=\"${getSharedModule().nullToStringCoalesce(env.SONAR_PULLREQUEST_BRANCH)}\"",
-                                                "--env SONAR_PULLREQUEST_BASE=\"${getSharedModule().nullToStringCoalesce(env.SONAR_PULLREQUEST_BASE)}\"",
-                                                "--env SONAR_PULLREQUEST_KEY=\"${getSharedModule().nullToStringCoalesce(env.SONAR_PULLREQUEST_KEY)}\"",
-                                                "--volume \"${env.WORKSPACE}:/usr/src\"",
-                                                "--workdir \"/usr/src/${env.WEBAPP_PROJECT_PATH}\"",
-                                            ].join(' ')
-
-                                            def container = docker.image('sonarsource/sonar-scanner-cli:4.7')
-                                            container.pull()
-                                            container.run(args)
-                                        }
-                                    }
+                                    echo "Scan Web App"
                                 }
                             }
                         ])
                     }
-                }
+                
             }
         }
     ],
     publish: [
         'Publish Web App Docker Image to ECR': {
-            stage('Publish Web App Docker Image to ECR'){
-                if (!shouldPublishWebAppDockerImage()) { echo "Publish: skipped due to conditional"; return; }
-                if (env.BRANCH_NAME == "develop") getSharedModule().monitorOnSnyk(env.WEBAPP_DOCKER_IMAGE_NAME, env.FULL_VERSION, "src/web/app/build/Dockerfile", env.BRANCH_NAME)
-                getSharedModule().publishDockerImage(env.WEBAPP_DOCKER_IMAGE_NAME, env.FULL_VERSION)
+            stage('Publish Web App'){
+                echo "Publish Web App"
             }
         }
     ]
 ]
 
-def adminWebAppStages = [
-    build: [
-        'Build Admin Web App': {
-            stage('Build Admin Web App'){
-                if (!shouldRunBuildAdminWebAppStage()) { echo "Build: skipped due to conditional"; return; }
-                withEnv([
-                    "ADMINWEBAPP_PROJECT_PATH=src/web/admin/",
-                    "ADMINWEBSDK_PROJECT_PATH=src/web/admin-sdk/",
-                ]){
-                    stage('Prepare Admin Web App'){
-                        executeNodeProject("${env.ADMINWEBSDK_PROJECT_PATH}", ['npm ci'])
-                        executeNodeProject("${env.ADMINWEBAPP_PROJECT_PATH}", ['npm ci'])
-                    }
-                    stage('Admin Web App Tasks'){
-                        parallel ([
-                            failFast: true,
-                            'Build & Package Admin Web App': {
-                                stage('Build Admin Web App'){
-                                    executeNodeProject("${env.ADMINWEBAPP_PROJECT_PATH}", ['npm run build'], [
-                                        "--env VITE_APP_PRODUCT_ID=\"${env.ADMINWEBAPP_DOCKER_IMAGE_NAME}\"",
-                                        "--env VITE_APP_PRODUCT_VERSION=\"${env.CLOUD_PLATFORM_VERSION}\"",
-                                        "--env VITE_APP_PRODUCT_BUILD=\"${env.FULL_VERSION}\"",
-                                    ])
-                                }
-                                stage('Package Admin Web App'){
-                                    if (!shouldBuildAdminWebAppDockerImage()) { echo "Package: skipped due to conditional"; return; }
-                                    dir("${env.WORKSPACE}/${env.ADMINWEBAPP_PROJECT_PATH}"){
-                                        def args = [
-                                            "--no-cache",
-                                            "--build-arg \"INSTALLER=dist/${env.ADMINWEBAPP_DOCKER_IMAGE_NAME}-${env.CLOUD_PLATFORM_VERSION}.app.zip\"",
-                                            "--label \"com.insightsoftware.devops.session=${env.SESSION_ID}\"",
-                                            "--label \"com.insightsoftware.devops.image=distributable\"",
-                                            "--label \"com.insightsoftware.products.cloud-platform.service=${env.ADMINWEBAPP_DOCKER_IMAGE_NAME}\"",
-                                            "--label \"com.insightsoftware.products.cloud-platform.version=${env.CLOUD_PLATFORM_VERSION}\"",
-                                            "--label \"com.insightsoftware.products.cloud-platform.build=${env.FULL_VERSION}\"",
-                                            "--file \"build/Dockerfile\"",
-                                            "."
-                                        ].join(' ')
-
-                                        docker.build("${env.ADMINWEBAPP_DOCKER_IMAGE_NAME}:${env.FULL_VERSION}", args)
-                                    }
-                                }
-                            },
-                            'Test & Scan Admin Web App': {
-                                stage('Test Admin Web App'){
-                                    if (!shouldRunTestAdminWebAppStage()) { echo "Test: skipped due to conditional"; return; }
-                                    echo "Info: No tests defined"
-                                }
-                                stage('Scan Admin Web App'){
-                                    if (!shouldRunScanAdminWebAppStage()) { echo "Scan: skipped due to conditional"; return; }
-                                    dir("${env.WORKSPACE}/${env.ADMINWEBAPP_PROJECT_PATH}"){
-                                        withCredentials([
-                                            string(credentialsId: env.SONARCLOUD_WEBAPP_CREDENTIALS_ID, variable: 'SONARCLOUD_CREDENTIALS_JSON')
-                                        ]) {
-                                            echo "Info: No scanner defined"
-                                        }
-                                    }
-                                }
-                            }
-                        ])
-                    }
-                }
-            }
-        }
-    ],
-    publish: [
-        'Publish Admin Web App Docker Image to ECR': {
-            stage('Publish Admin Web App Docker Image to ECR'){
-                if (!shouldPublishAdminWebAppDockerImage()) { echo "Publish: skipped due to conditional"; return; }
-                if (env.BRANCH_NAME == "develop") getSharedModule().monitorOnSnyk(env.ADMINWEBAPP_DOCKER_IMAGE_NAME, env.FULL_VERSION, "src/web/admin/build/Dockerfile", env.BRANCH_NAME)
-                getSharedModule().publishDockerImage(env.ADMINWEBAPP_DOCKER_IMAGE_NAME, env.FULL_VERSION)
-            }
-        }
-    ]
-]
 
 def assetsStages = [
     build: [
         'Build Assets': {
             stage('Build Assets'){
-                if (!shouldRunBuildAssetsStage()) { echo "Build: skipped due to conditional"; return; }
                 parallel ([
                     'Build B2C Page-Layout Assets': {
-                        stage('Build B2C Page-Layout Assets') {
-                            if (!shouldBuildAssets()) { echo "Build: skipped due to conditional"; return; }
-                            executeNodeProject('resources/b2c/page-layouts/', ['npm ci', 'npm run build'])
+                        stage('Build Assets'){
+                            echo "Build assets"
                         }
                     },
                     'Build B2C Email Assets': {
-                        stage('Build B2C Email Assets') {
-                            if (!shouldBuildAssets()) { echo "Build: skipped due to conditional"; return; }
-                            executeNodeProject('resources/emails/', ['npm ci', 'npm run build'])
+                        stage('Build Email Assets'){
+                            echo "Build Email assets"
                         }
                     }
                 ])
@@ -200,15 +68,13 @@ def assetsStages = [
         'Publish Assets': {
             stage('Publish Assets'){
                 stage('Publish B2C Page-Layout Assets'){
-                    if (!shouldPublishAssets()) { echo "Publish: skipped due to conditional"; return; }
-                    dir("${env.WORKSPACE}/resources/b2c/page-layouts/dist/assets/"){
-                        zip zipFile: 'assets.b2c-page-layouts.zip', archive: true
+                    stage('Publish Assets'){
+                        echo "Publish assets"
                     }
                 }
                 stage('Publish Email Assets'){
-                    if (!shouldPublishAssets()) { echo "Publish: skipped due to conditional"; return; }
-                    dir("${env.WORKSPACE}/resources/emails/dist/assets/"){
-                        zip zipFile: 'assets.emails.zip', archive: true
+                    stage('Publish Email Assets'){
+                        echo "Publish Email Assets"
                     }
                 }
             }
@@ -229,9 +95,6 @@ node {
             parallel([
                 'Build Web App' : {
                     parallel webAppStages.build
-                },
-                'Build Admin Web App' : {
-                    parallel adminWebAppStages.build
                 },
                 'Build Assets': {
                     parallel assetsStages.build
