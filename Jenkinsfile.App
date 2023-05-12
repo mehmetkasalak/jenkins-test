@@ -25,26 +25,29 @@ def build = [
     ]
 ]
 
-// def sharedCommonModule(){
-//     def sharedModule = evaluate readTrusted("common.groovy")
-//     return sharedModule
-// }
+def sharedCommonModule(){
+     def sharedModule = evaluate readTrusted("common.groovy")
+     return sharedModule
+}
 
 def isCriticalBranch(){
     return SHARED_MODULE.getRunAsBranch() ==~ 'master|develop|release/.*|hotfix/.*'
 }
 
 pipeline {
-    env.SHARED_MODULE = evaluate readTrusted("common.groovy")
     agent any
     options {
 		timeout(time: params.TIMEOUT as int, unit: 'MINUTES')
         parallelsAlwaysFailFast()
     }
+    environment{
+        SHARED_MODULE = sharedCommonModule()
+    }
     stages {
         stage('App Parallel Stage') {
             steps{
 				script{
+                    env.SHARED_MODULE = sharedCommonModule()
 					parallel (build.steps)
 				}
 			}
