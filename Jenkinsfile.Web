@@ -3,12 +3,15 @@ def shouldRunBuildStage() {
 }
 
 
+
 def webAppStages = [
     build: [
         'Build Web App': {
             stage('Build Web App'){
+                def sharedModule = evaluate readTrusted("common.groovy")
                 stage('Prepare Web App'){
                         echo "['npm ci']"
+                        sharedModule.echoTest()
                     }
                     stage('Web App Tasks'){
                         parallel ([
@@ -16,9 +19,11 @@ def webAppStages = [
                             'Build & Package Web App': {
                                 stage('Build Web App'){
                                     echo "Build Web App"
+                                    sharedModule.echoTest()
                                 }
                                 stage('Package Web App'){
                                     echo "Package Web App"
+                                    sharedModule.echoTest()
                                 }
                             },
                             'Test & Scan Web App': {
@@ -84,13 +89,14 @@ def assetsStages = [
 
 
 node {
+    def sharedModule = evaluate readTrusted("common.groovy")
     stage('Web Stage') {
         echo 'I am The First Web Stage'
     }
     stage('Second Stage') {
         echo 'I am The Second Web Stage'
     }
-    stage('Build'){
+    stage('Parallel Web Stage'){
     if(shouldRunBuildStage()){
             parallel([
                 'Build Web App' : {
@@ -103,14 +109,3 @@ node {
         }
     }
 }
-
-// pipeline {
-//     agent any
-//     stages {
-//         stage('Web Stage') {
-//             steps {
-//                 echo "The First Web Stage"
-//             }
-//         }
-//     }
-// }

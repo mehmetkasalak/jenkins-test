@@ -1,6 +1,11 @@
 // Linux Agent Label
 def linuxAgentLabel = 'linux-burst'
 
+//  Version
+def getVersion(){
+    return '1.0.0'
+}
+
 // Set Parameters of Build Pipeline
 def setProperties(){
     properties([
@@ -29,7 +34,7 @@ def setEnvironments(commonModule){
 	scmVars = checkout scm
 	env.GIT_COMMIT = scmVars.GIT_COMMIT
 	env.BRANCH_NAME = scmVars.GIT_BRANCH
-	env.CLOUD_PLATFORM_VERSION = commonModule.cloudPlatformVersion()
+	env.CLOUD_PLATFORM_VERSION = commonModule.getVersion()
 	env.GIT_COMMIT_HASH_PART = "h${commonModule.getCommitHashPart()}"
 	env.SUFFIX_WITH_BRANCH = "${commonModule.getSuffix(commonModule.getRunAsBranch())}"
     env.VERSION_REVISION = "${env.GIT_COMMIT_HASH_PART}${env.SUFFIX_WITH_BRANCH}"
@@ -39,8 +44,8 @@ def setEnvironments(commonModule){
 
 node(linuxAgentLabel) {
 	def commonModule = evaluate readTrusted("common.groovy")
-    def hasWebChange = false
-    def hasAppChange = false
+    def hasWebChange = true
+    def hasAppChange = true
     try{
 		setProperties()
 		setEnvironments(commonModule)

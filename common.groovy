@@ -1,6 +1,9 @@
-// Cloud Platform Version
-def cloudPlatformVersion(){
-    return '23.2.2.0'
+//
+// Reusable Steps
+//
+
+def echoTest(){
+    echo "Test shared method"
 }
 
 // get commit hash part
@@ -8,9 +11,6 @@ def getCommitHashPart(){
 	echo "${env.GIT_COMMIT}"
 	return env.GIT_COMMIT.substring(0,6)
 }
-//
-// Reusable Steps
-//
 
 // Only when true we should run clean the Jenkins workspace in the agents
 def shouldCleanWorkspace(){
