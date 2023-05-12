@@ -25,18 +25,19 @@ def build = [
     ]
 ]
 
-def sharedCommonModule = evaluate readTrusted("common.groovy")
+def sharedCommonModule
 
-def sharedCommonModule(){
-    def sharedModule = evaluate readTrusted("common.groovy")
-    return sharedModule
-}
+// def sharedCommonModule(){
+//     def sharedModule = evaluate readTrusted("common.groovy")
+//     return sharedModule
+// }
 
 def isCriticalBranch(){
     return sharedCommonModule.getRunAsBranch() ==~ 'master|develop|release/.*|hotfix/.*'
 }
 
 pipeline {
+    sharedCommonModule = evaluate readTrusted("common.groovy")
     agent any
     options {
 		timeout(time: params.TIMEOUT as int, unit: 'MINUTES')
