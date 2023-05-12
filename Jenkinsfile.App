@@ -20,6 +20,9 @@ def build = [
                 stage('In Parallel 5') {
 					echo "isCriticalBranch : ${isCriticalBranch()}"
 				}
+                stage('In Parallel 5') {
+					echo "shouldCleanWorkspace : ${env.SHOULD_CLEAN_WORKSPACE()}"
+				}
 			}
         }
     ]
@@ -41,7 +44,7 @@ pipeline {
         parallelsAlwaysFailFast()
     }
     environment{
-        SHARED_MODULE = sharedCommonModule()
+        SHOULD_CLEAN_WORKSPACE = sharedCommonModule().shouldCleanWorkspace
     }
     stages {
         stage('App Parallel Stage') {
