@@ -87,7 +87,7 @@ def assetsStages = [
     ]
 ]
 
-
+@Field
 def sharedModule = evaluate readTrusted("common.groovy")
 
 node {
