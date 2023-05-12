@@ -8,7 +8,7 @@ def webAppStages = [
     build: [
         'Build Web App': {
             stage('Build Web App'){
-                def sharedModule = evaluate readTrusted("common.groovy")
+                //def sharedModule = evaluate readTrusted("common.groovy")
                 stage('Prepare Web App'){
                         echo "['npm ci']"
                         sharedModule.echoTest()
@@ -88,8 +88,10 @@ def assetsStages = [
 ]
 
 
+def sharedModule = evaluate readTrusted("common.groovy")
+
 node {
-    def sharedModule = evaluate readTrusted("common.groovy")
+    //sharedModule = evaluate readTrusted("common.groovy")
     stage('Web Stage') {
         echo 'I am The First Web Stage'
     }
