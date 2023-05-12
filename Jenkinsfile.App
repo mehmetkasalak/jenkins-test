@@ -25,13 +25,15 @@ def build = [
     ]
 ]
 
+def sharedCommonModule = evaluate readTrusted("common.groovy")
+
 def sharedCommonModule(){
     def sharedModule = evaluate readTrusted("common.groovy")
     return sharedModule
 }
 
 def isCriticalBranch(){
-    return sharedCommonModule().getRunAsBranch() ==~ 'master|develop|release/.*|hotfix/.*'
+    return sharedCommonModule.getRunAsBranch() ==~ 'master|develop|release/.*|hotfix/.*'
 }
 
 pipeline {
