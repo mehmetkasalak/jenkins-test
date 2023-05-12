@@ -21,7 +21,7 @@ def build = [
 					echo "isCriticalBranch : ${isCriticalBranch()}"
 				}
                 stage('In Parallel 5') {
-					echo "shouldCleanWorkspace : ${env.SHOULD_CLEAN_WORKSPACE()}"
+					echo "shouldCleanWorkspace : ${env.SHOULD_CLEAN_WORKSPACE}"
 				}
 			}
         }
