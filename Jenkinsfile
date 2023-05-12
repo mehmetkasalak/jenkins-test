@@ -66,15 +66,22 @@ node(linuxAgentLabel) {
                     hasWebChange |= file.contains("src/web")
                 }
             }
-            if(hasAppChange){
-                echo "Has App Change"
-                load "Jenkinsfile.App"
-            }
-
-            if(hasWebChange){
-                echo "Has Web Change"
-                load "Jenkinsfile.Web"
-            }
+            stage('Run Steps'){
+                   parallel([
+                    'Run Backend Jenkins' : {
+                       if(hasAppChange){
+                            echo "Has App Change"
+                            load "Jenkinsfile.App"
+                        }            
+                    },
+                    'Run Frontend Jenkins' : {
+                        if(hasWebChange){
+                            echo "Has Web Change"
+                            load "Jenkinsfile.Web"
+                        }           
+                    }
+                   ])
+            }            
         }
     }
     finally {
