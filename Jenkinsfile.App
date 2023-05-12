@@ -34,7 +34,7 @@ def sharedCommonModule(){
 }
 
 def isCriticalBranch(){
-    return SHARED_MODULE.getRunAsBranch() ==~ 'master|develop|release/.*|hotfix/.*'
+    return sharedCommonModule().getRunAsBranch() ==~ 'master|develop|release/.*|hotfix/.*'
 }
 
 pipeline {
@@ -44,7 +44,7 @@ pipeline {
         parallelsAlwaysFailFast()
     }
     environment{
-        SHOULD_CLEAN_WORKSPACE = sharedCommonModule().shouldCleanWorkspace
+        SHOULD_CLEAN_WORKSPACE = sharedCommonModule().shouldCleanWorkspace()
     }
     stages {
         stage('App Parallel Stage') {
