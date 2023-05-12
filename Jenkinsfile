@@ -34,7 +34,7 @@ def setEnvironments(commonModule){
 	scmVars = checkout scm
 	env.GIT_COMMIT = scmVars.GIT_COMMIT
 	env.BRANCH_NAME = scmVars.GIT_BRANCH
-	env.CLOUD_PLATFORM_VERSION = commonModule.getVersion()
+	env.CLOUD_PLATFORM_VERSION = getVersion()
 	env.GIT_COMMIT_HASH_PART = "h${commonModule.getCommitHashPart()}"
 	env.SUFFIX_WITH_BRANCH = "${commonModule.getSuffix(commonModule.getRunAsBranch())}"
     env.VERSION_REVISION = "${env.GIT_COMMIT_HASH_PART}${env.SUFFIX_WITH_BRANCH}"
