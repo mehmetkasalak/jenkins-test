@@ -65,15 +65,8 @@ node(linuxAgentLabel) {
                     hasAppChange |= file.contains("src/dotnet") || file.contains("src/apis")
                     hasWebChange |= file.contains("src/web")
                     if(hasAppChange && hasWebChange){
-                        echo 'for loop have a change in code '
+                        echo 'There is a change in code '
                         break;   
-                    }
-                }
-                changedFiles.each{file->
-                    hasAppChange |= file.contains("src/dotnet") || file.contains("src/apis")
-                    hasWebChange |= file.contains("src/web")
-                    if(hasAppChange && hasWebChange){
-                        echo 'have a change in code'
                     }
                 }
             }
