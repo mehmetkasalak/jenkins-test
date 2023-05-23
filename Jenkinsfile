@@ -72,20 +72,20 @@ node(linuxAgentLabel) {
             }
             stage('Run Steps'){
                    parallel([
-                    'Run Backend Jenkins' : {
-                       if(hasAppChange){
-                            echo "Has App Change"
-                            load "Jenkinsfile.App"
-                        }            
-                    },
                     'Run Frontend Jenkins' : {
                         if(hasWebChange){
                             echo "Has Web Change"
                             load "Jenkinsfile.Web"
                         }           
                     }
+                    'Run Backend Jenkins' : {
+                       if(hasAppChange){
+                            echo "Has App Change"
+                            load "Jenkinsfile.App"
+                        }            
+                    },
                    ])
-            }            
+            } 
         }
     }
     finally {
