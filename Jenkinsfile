@@ -64,6 +64,10 @@ node(linuxAgentLabel) {
                 changedFiles.each{file->
                     hasAppChange |= file.contains("src/dotnet") || file.contains("src/apis")
                     hasWebChange |= file.contains("src/web")
+                    if(hasAppChange && hasWebChange){
+                        echo 'have a change in code'
+                        return
+                    }
                 }
             }
             stage('Run Steps'){
