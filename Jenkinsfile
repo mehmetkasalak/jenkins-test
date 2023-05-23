@@ -61,6 +61,16 @@ node(linuxAgentLabel) {
                         }
                     }
                 }
+                def list = [1, 2, 3, 4, 5]
+                list.any { element ->
+                    if (element/2 == 0)
+                        return // continue
+
+                    echo element
+
+                    if (element == 3)
+                        true // break
+                }
                 changedFiles.each{file->
                     hasAppChange |= file.contains("src/dotnet") || file.contains("src/apis")
                     hasWebChange |= file.contains("src/web")
