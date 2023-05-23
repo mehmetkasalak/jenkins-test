@@ -77,13 +77,13 @@ node(linuxAgentLabel) {
                             echo "Has Web Change"
                             load "Jenkinsfile.Web"
                         }           
-                    }
+                    },
                     'Run Backend Jenkins' : {
                        if(hasAppChange){
                             echo "Has App Change"
                             load "Jenkinsfile.App"
                         }            
-                    },
+                    }
                    ])
             } 
         }
