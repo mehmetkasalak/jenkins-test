@@ -66,7 +66,7 @@ node(linuxAgentLabel) {
                     if (element/2 == 0)
                         return // continue
 
-                    echo element
+                    echo "${element}"
 
                     if (element == 3)
                         true // break
