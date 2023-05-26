@@ -65,9 +65,9 @@ node(linuxAgentLabel) {
                 }
                 for(file in changedFiles){
                     hasBackendChange |= file.contains("src/dotnet") || file.contains("src/apis")
-                    hasFrontendChange |= file.contains("src/web") || file.contains("src/apis") || file.contains("resources") 
+                    hasFrontendChange |= file.contains("src/web") || file.contains("src/apis") || file.startsWith("resources") 
                     //Check for application code changes for both backend and frontend
-                    hasAppChange |= file.contains("src/dotnet") || file.contains("src/apis") || file.contains("src/web") || file.contains("resources") 
+                    hasAppChange |= file.contains("src/dotnet") || file.contains("src/apis") || file.contains("src/web") || file.startsWith("resources") 
                     hasOnlyAutomationChange |= file.contains("Ranorex") || file.contains("Selenium") || file.contains("e2e")
                     // break if any change detected in backend/frontend/assets
                     if(hasAppChange){
