@@ -46,6 +46,8 @@ node(linuxAgentLabel) {
 	def commonModule = evaluate readTrusted("common.groovy")
     def hasWebChange = true
     def hasAppChange = true
+    def hasAppChange = false
+    def hasOnlyAutomationChange = false
     try{
 		setProperties()
 		setEnvironments(commonModule)
@@ -62,15 +64,23 @@ node(linuxAgentLabel) {
                     }
                 }
                 for(file in changedFiles){
-                    hasAppChange |= file.contains("src/dotnet") || file.contains("src/apis")
-                    hasWebChange |= file.contains("src/web")
-                    if(hasAppChange && hasWebChange){
-                        echo 'There is a change in code '
-                        break;   
+                    hasBackendChange |= file.contains("src/dotnet") || file.contains("src/apis")
+                    hasFrontendChange |= file.contains("src/web") || file.contains("src/apis") || file.contains("resources") 
+                    //Check for application code changes for both backend and frontend
+                    hasAppChange |= file.contains("src/dotnet") || file.contains("src/apis") || file.contains("src/web") || file.contains("resources") 
+                    hasOnlyAutomationChange |= file.contains("Ranorex") || file.contains("Selenium") || file.contains("e2e")
+                    // break if any change detected in backend/frontend/assets
+                    if(hasAppChange){
+                        echo file
+                        break
                     }
+                }
+                if(hasAppChange){
+                    hasOnlyAutomationChange = false
                 }
             }
             stage('Run Steps'){
+                if(!hasOnlyAutomationChange){
                    parallel([
                     'Run Frontend Jenkins' : {
                         if(hasWebChange){
@@ -85,6 +95,10 @@ node(linuxAgentLabel) {
                         }            
                     }
                    ])
+                }
+                else{
+                    echo 'Bypassed build & publish steps since there is no change or forced to'
+                }
             } 
         }
     }
