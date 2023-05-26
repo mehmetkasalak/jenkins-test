@@ -44,8 +44,8 @@ def setEnvironments(commonModule){
 
 node(linuxAgentLabel) {
 	def commonModule = evaluate readTrusted("common.groovy")
-    def hasWebChange = true
-    def hasAppChange = true
+    def hasFrontendChange = true
+    def hasBackendChange = true
     def hasAppChange = false
     def hasOnlyAutomationChange = false
     try{
@@ -83,13 +83,13 @@ node(linuxAgentLabel) {
                 if(!hasOnlyAutomationChange){
                    parallel([
                     'Run Frontend Jenkins' : {
-                        if(hasWebChange){
+                        if(hasFrontendChange){
                             echo "Has Web Change"
                             load "Jenkinsfile.Web"
                         }           
                     },
                     'Run Backend Jenkins' : {
-                       if(hasAppChange){
+                       if(hasBackendChange){
                             echo "Has App Change"
                             load "Jenkinsfile.App"
                         }            
