@@ -41,7 +41,6 @@ pipeline {
     agent any
     options {
 		timeout(time: params.TIMEOUT as int, unit: 'MINUTES')
-        buildBlocker (useBuildBlocker: true, blockLevel: 'GLOBAL', scanQueueFor: 'ALL', blockingJobs: 'hello-world')
         parallelsAlwaysFailFast()
     }
     environment{
