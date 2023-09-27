@@ -41,6 +41,7 @@ pipeline {
     agent any
     options {
 		timeout(time: params.TIMEOUT as int, unit: 'MINUTES')
+        buildBlocker (useBuildBlocker: true, blockLevel: 'GLOBAL', scanQueueFor: 'ALL', blockingJobs: 'hello-w*')
         parallelsAlwaysFailFast()
     }
     environment{
@@ -50,6 +51,7 @@ pipeline {
         stage('App Parallel Stage') {
             steps{
 				script{
+                    sleep time: 15, unit: 'SECONDS'
                     env.SHARED_MODULE = sharedCommonModule()
 					parallel (build.steps)
 				}
